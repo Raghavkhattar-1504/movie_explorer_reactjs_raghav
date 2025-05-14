@@ -23,6 +23,7 @@
     "axios": "^1.9.0",
     "firebase": "^11.6.1",
     "framer-motion": "^12.9.4",
+    "jest-fetch-mock": "^3.0.3",
     "keen-slider": "^6.8.6",
     "lucide-react": "^0.503.0",
     "react": "^19.0.0",

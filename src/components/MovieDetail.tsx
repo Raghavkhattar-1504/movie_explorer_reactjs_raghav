@@ -379,13 +379,15 @@ const MovieDetail = () => {
           }}
         >
           {allMoviesData.length > 0 && (
-            <Slider {...getSliderSettings()} sx={{ p: isMobile ? '0 10px' : '0 30px' }}>
+            <Box sx={{ p: isMobile ? '0 10px' : '0 30px' }}>
+            <Slider {...getSliderSettings()} >
               {allMoviesData.map((data, index) => (
                 <Box key={index} sx={{ px: 5, pl: isMobile ? 3 : 2 }} onClick={handleMovieCardClick}>
                   <MovieCard data={data} />
                 </Box>
               ))}
             </Slider>
+            </Box>
           )}
         </Box>
       </Box>

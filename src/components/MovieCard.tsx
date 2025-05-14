@@ -118,7 +118,7 @@ const MovieCard = ({ data }: { data: movie }) => {
                     <Box sx={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
 
                         <Typography variant="h6" sx={{ fontSize: '15px', fontWeight: 'bold', backgroundColor: '#005FF4', padding: '0px 10px', borderRadius: '10px' }}>
-                            {genre.name}
+                            {genre.name || 'Unknown'}
                         </Typography>
 
                     </Box>

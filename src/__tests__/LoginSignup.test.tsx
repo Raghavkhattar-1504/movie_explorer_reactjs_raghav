@@ -31,16 +31,16 @@ describe('AuthPage Component', () => {
   test('renders login form by default', () => {
     render(<AuthPage navigate={mockNavigate} />);
 
-    expect(screen.getByRole('button', { name: 'LOGIN' })).toBeInTheDocument();
-    expect(screen.getByText('SIGNUP')).toBeInTheDocument();
     expect(screen.getByLabelText('EMAIL')).toBeInTheDocument();
     expect(screen.getByLabelText('PASSWORD')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'LOGIN' })).toBeInTheDocument();
+
     expect(screen.queryByLabelText('NAME')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('CONFIRM PASSWORD')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('PHONE NUMBER')).not.toBeInTheDocument();
   });
 
-  test('toggles to signup form when signup is clicked', async () => {
+  test('toggles to signup form when SIGNUP is clicked', async () => {
     render(<AuthPage navigate={mockNavigate} />);
 
     await userEvent.click(screen.getByText('SIGNUP'));
@@ -66,6 +66,7 @@ describe('AuthPage Component', () => {
     render(<AuthPage navigate={mockNavigate} />);
 
     await userEvent.click(screen.getByText('SIGNUP'));
+
     await userEvent.click(screen.getByRole('button', { name: 'SIGN UP' }));
 
     expect(screen.getByText('Name is required')).toBeInTheDocument();
@@ -115,6 +116,7 @@ describe('AuthPage Component', () => {
     render(<AuthPage navigate={mockNavigate} />);
 
     await userEvent.click(screen.getByText('SIGNUP'));
+
     await userEvent.type(screen.getByLabelText('NAME'), 'John Doe');
     await userEvent.type(screen.getByLabelText('EMAIL'), 'test@example.com');
     await userEvent.type(screen.getByLabelText('PASSWORD'), 'password123');
@@ -124,11 +126,13 @@ describe('AuthPage Component', () => {
 
     await waitFor(() => {
       expect(mockSignUpAPI).toHaveBeenCalledWith({
-        name: 'John Doe',
-        email: 'test@example.com',
-        password: 'password123',
-        confirm_password: 'password123',
-        phone_number: '1234567890',
+        user: {
+          name: 'John Doe',
+          email: 'test@example.com',
+          password: 'password123',
+          confirm_password: 'password123',
+          phone_number: '1234567890',
+        },
       });
       expect(toast.success).toHaveBeenCalledWith('Signup successful! Please log in.', expect.any(Object));
     });
@@ -140,6 +144,7 @@ describe('AuthPage Component', () => {
     render(<AuthPage navigate={mockNavigate} />);
 
     await userEvent.click(screen.getByText('SIGNUP'));
+
     await userEvent.type(screen.getByLabelText('NAME'), 'John Doe');
     await userEvent.type(screen.getByLabelText('EMAIL'), 'test@example.com');
     await userEvent.type(screen.getByLabelText('PASSWORD'), 'password123');

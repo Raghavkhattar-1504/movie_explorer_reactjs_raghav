@@ -31,10 +31,6 @@ interface NavbarProps {
   navigate: (path: string) => void;
 }
 
-const IsLoggedIn = localStorage.getItem("token");
-const Supervisor = localStorage.getItem("role");
-const IsSupervisor = Supervisor === 'supervisor' ? true : false;
-
 class NavbarNew extends Component<NavbarProps, NavbarState> {
   searchIconRef = createRef<HTMLDivElement>();
 
@@ -93,6 +89,8 @@ class NavbarNew extends Component<NavbarProps, NavbarState> {
   render() {
     const { anchorEl, isMobile } = this.state;
     const open = Boolean(anchorEl);
+    const isLoggedIn = !!localStorage.getItem('token');
+    const isSupervisor = localStorage.getItem('role') === 'supervisor';
 
     return (
       <Box
@@ -135,7 +133,9 @@ class NavbarNew extends Component<NavbarProps, NavbarState> {
         >
           <CirclePlay
             size={isMobile ? "20px" : "27px"}
-            onClick={this.handleHomeIconClick} />
+            onClick={this.handleHomeIconClick}
+            data-testid="circle-play-icon"
+          />
           MOVIE EXPLORER
         </Typography>
 
@@ -156,19 +156,29 @@ class NavbarNew extends Component<NavbarProps, NavbarState> {
           {!isMobile && (
             <>
               <Tooltip title="Search" arrow>
-                <Box ref={this.searchIconRef} onClick={this.handleSearchClick}>
+                <Box
+                  ref={this.searchIconRef}
+                  onClick={this.handleSearchClick}
+                  data-testid="search-icon"
+                >
                   <Search size="27px" />
                 </Box>
               </Tooltip>
 
               <Tooltip title="All Movies" arrow>
-                <Box onClick={this.handleAllMoviesIconClick}>
+                <Box
+                  onClick={this.handleAllMoviesIconClick}
+                  data-testid="monitor-play-icon"
+                >
                   <MonitorPlay size="27px" />
                 </Box>
               </Tooltip>
 
               <Tooltip title="Buy Subscription" arrow>
-                <Box onClick={this.handleSubscriptionIconClick}>
+                <Box
+                  onClick={this.handleSubscriptionIconClick}
+                  data-testid="receipt-indian-rupee-icon"
+                >
                   <ReceiptIndianRupee size="27px" />
                 </Box>
               </Tooltip>
@@ -176,7 +186,11 @@ class NavbarNew extends Component<NavbarProps, NavbarState> {
           )}
 
           <Tooltip title="Profile" arrow>
-            <Box onClick={this.handleMenuClick} sx={{ marginTop: isMobile ? 1 : 0, color: 'white' }}>
+            <Box
+              onClick={this.handleMenuClick}
+              sx={{ marginTop: isMobile ? 1 : 0, color: 'white' }}
+              data-testid="user-circle-icon"
+            >
               <UserCircle size={27} />
             </Box>
           </Tooltip>
@@ -198,68 +212,99 @@ class NavbarNew extends Component<NavbarProps, NavbarState> {
               },
             }}
           >
-            {IsLoggedIn ? (
+            {isLoggedIn ? (
               [
                 isMobile && [
-                  <NavLink to='/search' style={{ textDecoration: 'none' }} key="search">
-                    <MenuItem onClick={this.handleSearchClick} sx={{ color: 'white' }}>
-                      <Search size={20} style={{ marginRight: 8, color: 'white' }} />
-                      Search
-                    </MenuItem>
-                  </NavLink>,
-                  <NavLink to='/allmovies' style={{ textDecoration: 'none' }} key="allmovies">
-                    <MenuItem onClick={this.handleSearchClick} sx={{ color: 'white' }}>
-                      <MonitorPlay size={20} style={{ marginRight: 8, color: 'white' }} />
+                  <MenuItem
+                    onClick={this.handleSearchClick}
+                    sx={{ color: 'white' }}
+                    key="search"
+                  >
+                    <Search size={20} style={{ marginRight: 8, color: 'white' }} />
+                    Search
+                  </MenuItem>,
+                  <NavLink
+                    to='/allmovies'
+                    style={{ textDecoration: 'none' }}
+                    key="allmovies"
+                  >
+                    <MenuItem sx={{ color: 'white' }}>
+                      <MonitorPlay
+                        size={20}
+                        style={{ marginRight: 8, color: 'white' }}
+                      />
                       All Movies
                     </MenuItem>
-                  </NavLink>
+                  </NavLink>,
                 ],
 
-                IsSupervisor && (
+                isSupervisor && (
                   <NavLink
                     to="/addMovie"
                     style={{ textDecoration: 'none', color: 'white' }}
                     key="addmovie"
                   >
-                    <MenuItem onClick={this.handleMenuClose}>
+                    <MenuItem onClick={this.handleMenuClose} data-testid="add-movie-item">
                       <MovieCreationIcon sx={{ marginRight: 1 }} />
                       Add Movie
                     </MenuItem>
                   </NavLink>
                 ),
 
-                !IsSupervisor && (
-                  <MenuItem onClick={this.handleMenuClose} key="profile">
+                !isSupervisor && (
+                  <MenuItem
+                    onClick={this.handleMenuClose}
+                    key="profile"
+                    data-testid="profile-item"
+                  >
                     <PermIdentityIcon sx={{ marginRight: 1 }} />
                     Profile
                   </MenuItem>
                 ),
 
-                <MenuItem onClick={this.handleMenuClose} key="account">
+                <MenuItem
+                  onClick={this.handleMenuClose}
+                  key="account"
+                  data-testid="account-item"
+                >
                   <AccountCircleIcon sx={{ marginRight: 1 }} />
                   My account
                 </MenuItem>,
-                
-                <NavLink to='/subscription' style={{ textDecoration: 'none' }} key="allmovies">
-                <MenuItem onClick={this.handleMenuClose} key="nosub" sx={{ color: 'white' }}>
-                  <LoyaltyOutlinedIcon sx={{ marginRight: 1 }} />
-                  No Subscription
-                </MenuItem>
+
+                <NavLink
+                  to='/subscription'
+                  style={{ textDecoration: 'none' }}
+                  key="subscription"
+                >
+                  <MenuItem
+                    onClick={this.handleMenuClose}
+                    sx={{ color: 'white' }}
+                    data-testid="no-subscription-item"
+                  >
+                    <LoyaltyOutlinedIcon sx={{ marginRight: 1 }} />
+                    No Subscription
+                  </MenuItem>
                 </NavLink>,
 
-                <MenuItem onClick={this.handleSignOut} key="logout">
+                <MenuItem
+                  onClick={this.handleSignOut}
+                  key="logout"
+                  data-testid="logout-item"
+                >
                   <Logout sx={{ marginRight: 1 }} />
                   Logout
-                </MenuItem>
+                </MenuItem>,
               ]
             ) : (
-              <MenuItem onClick={() => this.props.navigate('/login')}>
+              <MenuItem
+                onClick={() => this.props.navigate('/login')}
+                data-testid="login-item"
+              >
                 <Logout sx={{ marginRight: 1 }} />
                 Login/Signup
               </MenuItem>
             )}
           </Menu>
-
         </Box>
       </Box>
     );
