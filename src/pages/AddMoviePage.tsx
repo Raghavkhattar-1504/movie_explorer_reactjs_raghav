@@ -126,8 +126,8 @@ const AddMovieForm: React.FC = () => {
             setGenre(0);
             setYear('');
             setPlan(false);
-            setPosterImage(null);
-            setBannerImage(null);
+            setPosterImage(posterImage);
+            setBannerImage(bannerImage);
         } catch (error) {
             console.error("Error Adding/Editing Movie:", error);
             toast.error('An error occurred. Please try again.', {

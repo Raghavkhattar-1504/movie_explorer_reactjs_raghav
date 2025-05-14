@@ -4,13 +4,12 @@ import * as api from '../utils/API';
 import { movie } from '../components/MovieCard';
 import '@testing-library/jest-dom';
 
-// Mock MovieCard
+
 jest.mock('../components/MovieCard', () => ({
   __esModule: true,
   default: ({ data }: { data: movie }) => <div data-testid="movie-card">{data.title}</div>,
 }));
 
-// Mock APIs
 const mockMovies = [
   { id: 1, title: 'Inception' },
   { id: 2, title: 'The Matrix' },
