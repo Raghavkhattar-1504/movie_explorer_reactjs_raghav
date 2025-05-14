@@ -4,7 +4,6 @@ import {
   Container,
   TextField,
   Typography,
-  Grid,
   useTheme,
   useMediaQuery,
   Skeleton
@@ -47,10 +46,24 @@ const Search = () => {
 
   const renderSkeletons = (count = 6) =>
     Array.from({ length: count }).map((_, index) => (
-      <Grid item xs={12} sm={6} md={4} key={index}>
-        <Skeleton variant="rectangular" height={300} width={250} sx={{ borderRadius: 2, bgcolor: '#1a1a1a' }} />
-        <Skeleton height={30} width="80%" sx={{ mt: 1, bgcolor: '#2a2a2a' }} />
-      </Grid>
+      <Box
+        key={index}
+        sx={{
+          width: { xs: '100%', sm: '48%', md: '30%' },
+          mb: 3,
+        }}
+      >
+        <Skeleton
+          variant="rectangular"
+          height={300}
+          sx={{ borderRadius: 2, bgcolor: '#1a1a1a' }}
+        />
+        <Skeleton
+          height={30}
+          width="80%"
+          sx={{ mt: 1, bgcolor: '#2a2a2a' }}
+        />
+      </Box>
     ));
 
   return (
@@ -105,21 +118,34 @@ const Search = () => {
               >
                 RESULTS FOR "{query}"
               </Typography>
-              {isLoadingSearch ? (
-                <Grid container spacing={2}>{renderSkeletons(6)}</Grid>
-              ) : searchedMovies.length > 0 ? (
-                <Grid container spacing={2}>
-                  {searchedMovies.map((movie) => (
-                    <Grid item xs={12} sm={6} md={4} key={movie.id}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 2,
+                  justifyContent: { xs: 'center', sm: 'space-between' },
+                }}
+              >
+                {isLoadingSearch ? (
+                  renderSkeletons(6)
+                ) : searchedMovies.length > 0 ? (
+                  searchedMovies.map((movie) => (
+                    <Box
+                      key={movie.id}
+                      sx={{
+                        width: { xs: '100%', sm: '48%', md: '30%' },
+                        mb: 3,
+                      }}
+                    >
                       <MovieCard data={movie} />
-                    </Grid>
-                  ))}
-                </Grid>
-              ) : (
-                <Typography variant="body1" sx={{ color: 'grey.500' }}>
-                  No movies found.
-                </Typography>
-              )}
+                    </Box>
+                  ))
+                ) : (
+                  <Typography variant="body1" sx={{ color: 'grey.500' }}>
+                    No movies found.
+                  </Typography>
+                )}
+              </Box>
             </>
           )}
 
@@ -130,15 +156,28 @@ const Search = () => {
             >
               RECOMMENDED FOR YOU...
             </Typography>
-            <Grid container spacing={2}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 2,
+                justifyContent: { xs: 'center', sm: 'space-between' },
+              }}
+            >
               {isLoadingRecommendations
                 ? renderSkeletons(6)
                 : recommendedMovies.map((movie) => (
-                    <Grid item xs={12} sm={6} md={4} key={movie.id}>
+                    <Box
+                      key={movie.id}
+                      sx={{
+                        width: { xs: '100%', sm: '48%', md: '30%' },
+                        mb: 3,
+                      }}
+                    >
                       <MovieCard data={movie} />
-                    </Grid>
+                    </Box>
                   ))}
-            </Grid>
+            </Box>
           </Box>
         </Container>
       </Box>
