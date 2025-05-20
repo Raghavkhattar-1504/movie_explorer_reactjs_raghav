@@ -122,7 +122,7 @@ class AuthPage extends Component<AuthProps, AuthState> {
           position: window.innerWidth <= 600 ? 'top-center' : 'top-right',
         });
 
-        this.props.navigate('/home');
+        this.props.navigate('/');
       } else {
         const user = {
           name,
@@ -186,7 +186,6 @@ class AuthPage extends Component<AuthProps, AuthState> {
               width: '100vw',
               display: 'flex',
               flexDirection: 'column',
-              // background: `linear-gradient(to right, #0a0a0a, #000a3a, #001a80, #0022aa)`,
               backgroundImage: `url(${bg_img})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',

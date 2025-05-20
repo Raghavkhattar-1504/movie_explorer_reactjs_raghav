@@ -68,7 +68,6 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
     componentDidMount() {
         window.addEventListener('resize', this.updateDimensions);
         const savedPage = localStorage.getItem('currentPage');
-
         const initialPage = savedPage ? parseInt(savedPage, 10) : 1;
         this.fetchMovies(initialPage);
     }
@@ -80,9 +79,7 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
     fetchMovies = async (page: number) => {
         try {
             this.setState({ isLoading: true });
-
             const response = await allMoviesAPI(page);
-
             const moviesData = response.movies.map((movie: any) => ({
                 ...movie,
                 genre: movie.genre.name,
@@ -103,8 +100,6 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
             this.setState({ isLoading: false });
         }
     };
-
-
 
     handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
         this.fetchMovies(value);
@@ -187,7 +182,7 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
 
     renderSkeletons = (count = 5) => {
         return Array.from({ length: count }).map((_, index) => (
-            <Box key={index} sx={{ px: 2, py: 1, width: this.isMobile ? '90vw' : 250 }}>
+            <Box key={index} sx={{ px: 2, py: 1, width: this.isMobile ? '45vw' : 250 }}>
                 <Skeleton variant="rectangular" data-testid="skeleton" width="100%" height={320} sx={{ borderRadius: 2, bgcolor: '#444' }} />
                 <Skeleton width="60%" data-testid="skeleton" sx={{ bgcolor: '#555', mt: 1 }} />
             </Box>
@@ -195,7 +190,7 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
     };
 
     render() {
-        const paddingX = this.isMobile ? 1 : 3;
+        const paddingX = this.isMobile ? 0 : 3;
         return (
             <div>
                 <Navbar />
@@ -213,7 +208,7 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
                             paddingX: paddingX,
                         }}
                     >
-                        <Box sx={{ width: '100%', px: paddingX, py: 3 }}>
+                        <Box sx={{ width: '100%',px: this.isMobile ? 1 : 3, py: 3 }}>
                             <Typography variant="h5" sx={{ color: 'white', fontSize: this.isMobile ? '20px' : '25px', mb: 2 }}>
                                 TOP GENRES...
                             </Typography>
@@ -228,7 +223,7 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
                             </Box>
                         </Box>
 
-                        <Typography sx={{ fontSize: this.isMobile ? '20px' : '25px', color: 'white', py: 2, width: '100%', textAlign: 'center' }}>
+                        <Typography sx={{ fontSize: this.isMobile ? '20px' : '25px', color: 'white', py: 2, width: '100%', px: this.isMobile ? 1 : 3 }}>
                             ALL MOVIES...
                         </Typography>
 
@@ -236,20 +231,26 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
                             sx={{
                                 display: 'flex',
                                 flexWrap: 'wrap',
-                                justifyContent: 'center',
-                                gap: 2,
+                                justifyContent: this.isMobile ? 'space-evenly' : 'center',
+                                gap: this.isMobile ? 0 : 2,
                                 width: '100%',
                                 px: paddingX,
                             }}
                         >
                             {this.state.isLoading
-                                ? this.renderSkeletons(this.isMobile ? 3 : 6)
+                                ? this.renderSkeletons(this.isMobile ? 4 : 6)
                                 : this.state.moviesData.map((data: movie, index: Key | null | undefined) => (
-                                    <Box key={index} sx={{ maxWidth: 260, width: this.isMobile ? '90vw' : 'auto' }}>
+                                    <Box
+                                        key={index}
+                                        sx={{
+                                            flex: this.isMobile ? '0 0 48%' : '0 0 auto',
+                                            mb: 2,
+                                            maxWidth: 260,
+                                        }}
+                                    >
                                         <MovieCard data={data} />
                                     </Box>
-                                ))
-                            }
+                                ))}
                         </Box>
 
                         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', mt: 4 }}>

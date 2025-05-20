@@ -104,8 +104,8 @@ class Watchlist extends Component<HomePageProps, HomePageState> {
 
     renderSkeletons = (count = 5) => {
         return Array.from({ length: count }).map((_, index) => (
-            <Box key={index} sx={{ px: 2, py: 1, width: this.isMobile ? '90vw' : 250 }}>
-                <Skeleton variant="rectangular" data-testid="skeleton" width="100%" height={320} sx={{ borderRadius: 2, bgcolor: '#444' }} />
+            <Box key={index} sx={{ px: this.isMobile ? 1 : 2, py: 1, width: this.isMobile ? '47vw' : 250 }}>
+                <Skeleton variant="rectangular" data-testid="skeleton" width="100%" height={this.isMobile ? 220 : 320} sx={{ borderRadius: 2, bgcolor: '#444' }} />
                 <Skeleton width="60%" data-testid="skeleton" sx={{ bgcolor: '#555', mt: 1 }} />
             </Box>
         ));
@@ -139,15 +139,15 @@ class Watchlist extends Component<HomePageProps, HomePageState> {
                                 display: 'flex',
                                 flexWrap: 'wrap',
                                 justifyContent: 'center',
-                                gap: 2,
+                                gap: this.isMobile ? 0 : 2,
                                 width: '100%',
-                                px: paddingX,
+                                px: this.isMobile ? 0 : paddingX,
                             }}
                         >
                             {this.state.isLoading
                                 ? this.renderSkeletons(this.isMobile ? 3 : 6)
                                 : (this.state.moviesData ?? []).map((data: movie, index: Key | null | undefined) => (
-                                    <Box key={index} sx={{ maxWidth: 260, width: this.isMobile ? '90vw' : 'auto' }}>
+                                    <Box key={index} sx={{ maxWidth: 260, width: this.isMobile ? '47vw' : 'auto' }}>
                                         <MovieCard data={data} />
                                     </Box>
                                 ))

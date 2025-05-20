@@ -49,7 +49,7 @@ const Search = () => {
       <Box
         key={index}
         sx={{
-          width: { xs: '100%', sm: '48%', md: '30%' },
+          width: { xs: '48%', sm: '48%', md: '30%' }, 
           mb: 3,
         }}
       >
@@ -80,7 +80,7 @@ const Search = () => {
         <Container
           maxWidth="md"
           disableGutters
-          sx={{ py: { xs: 2, sm: 3, md: 4 }, px: { xs: 2, sm: 3 } }}
+          sx={{ py: { xs: 2, sm: 3, md: 4 }, px: { xs: 0, sm: 3 } }}
         >
           <Typography
             variant={isMobile ? 'h5' : 'h4'}
@@ -122,8 +122,8 @@ const Search = () => {
                 sx={{
                   display: 'flex',
                   flexWrap: 'wrap',
-                  gap: 2,
-                  justifyContent: { xs: 'center', sm: 'space-between' },
+                  gap: isMobile ? 0 : 2,
+                  justifyContent: 'space-between',
                 }}
               >
                 {isLoadingSearch ? (
@@ -133,7 +133,7 @@ const Search = () => {
                     <Box
                       key={movie.id}
                       sx={{
-                        width: { xs: '100%', sm: '48%', md: '30%' },
+                        width: { xs: '48%', sm: '48%', md: '30%' }, 
                         mb: 3,
                       }}
                     >
@@ -160,8 +160,8 @@ const Search = () => {
               sx={{
                 display: 'flex',
                 flexWrap: 'wrap',
-                gap: 2,
-                justifyContent: { xs: 'center', sm: 'space-between' },
+                gap: isMobile ? 0 : 2, 
+                justifyContent: 'space-between',
               }}
             >
               {isLoadingRecommendations
@@ -170,7 +170,7 @@ const Search = () => {
                     <Box
                       key={movie.id}
                       sx={{
-                        width: { xs: '100%', sm: '48%', md: '30%' },
+                        width: { xs: '48%', sm: '48%', md: '30%' }, 
                         mb: 3,
                       }}
                     >

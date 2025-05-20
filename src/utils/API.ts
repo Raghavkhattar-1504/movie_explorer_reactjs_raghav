@@ -38,15 +38,8 @@ export const logoutAPI = async () => {
 
 export const allMoviesAPI = async (page: number = 1) => {
   try {
-    const token = localStorage.getItem('token');
     const response = await axios.get(
-      `https://movie-ror-priyanshu-singh.onrender.com/api/v1/movies?page=${page}`,
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
-        },
-      }
+      `https://movie-ror-priyanshu-singh.onrender.com/api/v1/movies?page=${page}`
     );
 
     return response.data;
@@ -57,15 +50,19 @@ export const allMoviesAPI = async (page: number = 1) => {
 
 export const peopleChoiceAPI = async () => {
   try {
-    const token = localStorage.getItem('token');
     const response = await axios.get(
-      `https://movie-ror-priyanshu-singh.onrender.com/api/v1/movies?page=2`,
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
-        },
-      }
+      `https://movie-ror-priyanshu-singh.onrender.com/api/v1/movies?page=2`
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error('Error getting All Movies: ', error);
+  }
+}
+export const trendingNowAPI = async () => {
+  try {
+    const response = await axios.get(
+      `https://movie-ror-priyanshu-singh.onrender.com/api/v1/movies?page=3`
     );
 
     return response.data;

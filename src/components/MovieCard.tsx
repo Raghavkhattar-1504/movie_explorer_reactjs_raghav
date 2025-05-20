@@ -24,11 +24,17 @@ const MovieCard = ({ data }: { data: movie }) => {
 
     const handleClick = (data: movie) => {
         const isSubscriber = localStorage.getItem('plan_type');
-        if (isSubscriber !== 'premium' && data.premium === true) {
-            navigate(`/subscription`);
+        const isLoggedIn = localStorage.getItem('token');
+        if (!Boolean(isLoggedIn)) {
+            navigate(`/login`)
         }
         else {
-            navigate(`/home/detail/${data.id}`);
+            if (isSubscriber !== 'premium' && data.premium === true) {
+                navigate(`/subscription`);
+            }
+            else {
+                navigate(`/home/detail/${data.id}`);
+            }
         }
     };
 
@@ -41,9 +47,9 @@ const MovieCard = ({ data }: { data: movie }) => {
                 borderRadius: '12px',
                 margin: 2,
                 width: {
-                    xs: '120px',  
-                    sm: '180px',   
-                    md: '240px'    
+                    xs: '120px',
+                    sm: '180px',
+                    md: '240px'
                 },
                 height: {
                     xs: '220px',

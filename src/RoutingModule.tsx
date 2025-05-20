@@ -15,11 +15,11 @@ import Watchlist from './components/Watchlist';
 const RoutingModule = () => {
     const route = createBrowserRouter([
         {
-            path: '/',
+            path: '/login',
             element: <AuthPage />
         },
         {
-            path: '/home',
+            path: '/',
             element: <HomePage />
         },
         {

@@ -55,7 +55,7 @@ class NavbarNew extends Component<NavbarProps, NavbarState> {
   };
 
   handleHomeIconClick = () => {
-    this.props.navigate('/home');
+    this.props.navigate('/');
   };
 
   handleAllMoviesIconClick = () => {
