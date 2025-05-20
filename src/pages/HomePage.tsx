@@ -79,8 +79,6 @@ class HomePage extends Component<HomePageProps, HomePageState> {
     }
   }
 
-
-
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateDimensions);
   }
@@ -185,8 +183,8 @@ class HomePage extends Component<HomePageProps, HomePageState> {
     let slidesToShow = 5;
     let slidesToScroll = 5;
     if (this.isMobile) {
-      slidesToShow = 1;
-      slidesToScroll = 1;
+      slidesToShow = 2;
+      slidesToScroll = 2;
     } else if (this.isTablet) {
       slidesToShow = 2;
       slidesToScroll = 2;
@@ -219,36 +217,36 @@ class HomePage extends Component<HomePageProps, HomePageState> {
         {
           breakpoint: 600,
           settings: {
-            slidesToShow: 1,
-            slidesToScroll: 1,
+            slidesToShow: 2,
+            slidesToScroll: 2,
           },
         },
         {
-          breakpoint: 1440, // for small laptops/desktops
+          breakpoint: 1440, 
           settings: {
             slidesToShow: 4,
             slidesToScroll: 4,
           },
         },
         {
-          breakpoint: 1024, // tablets and small laptops
+          breakpoint: 1024,
           settings: {
             slidesToShow: 3,
             slidesToScroll: 3,
           },
         },
         {
-          breakpoint: 768, // tablets
+          breakpoint: 768, 
           settings: {
             slidesToShow: 2,
             slidesToScroll: 2,
           },
         },
         {
-          breakpoint: 480, // mobile
+          breakpoint: 480, 
           settings: {
-            slidesToShow: 1,
-            slidesToScroll: 1,
+            slidesToShow: 2,
+            slidesToScroll: 2,
           },
         },
       ],
@@ -290,7 +288,7 @@ class HomePage extends Component<HomePageProps, HomePageState> {
                 p: this.isMobile ? 1 : this.isTablet ? 2 : paddingX,
                 display: 'flex',
                 flexDirection: 'column',
-                gap: this.isMobile ? 1 : 2,
+                gap: this.isMobile ? 0 : 2,
               }}
             >
               <Box
@@ -322,7 +320,7 @@ class HomePage extends Component<HomePageProps, HomePageState> {
                 ) : (
                   <Slider {...this.getSliderSettings()}>
                     {moviesData.map((data, index) => (
-                      <Box key={index} sx={{ px: 2, paddingLeft: this.isMobile ? 1 : 2 }}>
+                      <Box key={index} sx={{ px: this.isMobile ? 0 : 2, paddingLeft: this.isMobile ? 0 : 2 }}>
                         <MovieCard data={data} />
                       </Box>
                     ))}
@@ -341,7 +339,7 @@ class HomePage extends Component<HomePageProps, HomePageState> {
                 ) : (
                   <Slider {...this.getSliderSettings()}>
                     {moviesData.map((data, index) => (
-                      <Box key={index} sx={{ px: 2, paddingLeft: this.isMobile ? 1 : 2 }}>
+                      <Box key={index} sx={{ px: this.isMobile ? 0 : 2 , paddingLeft: this.isMobile ? 0 : 2 }}>
                         <MovieCard data={data} />
                       </Box>
                     ))}
