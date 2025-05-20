@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
 import {
   Box,
   Typography,
@@ -14,6 +13,7 @@ import {
   Home as HomeIcon
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
+import { paymentSuccessAPI } from '../utils/API';
 
 const GradientBackground = styled(Box)({
   background: `linear-gradient(to right, #0a0a0a, #000a3a, #001a80, #0022aa)`,
@@ -89,18 +89,9 @@ const PaymentSuccessPage: React.FC = () => {
       }
 
       try {
-        const authToken = localStorage.getItem('token');
-        const response = await axios.get(
-          `https://movie-ror-priyanshu-singh.onrender.com/api/v1/subscriptions/success?session_id=${sessionId}`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
-
-        setSubscriptionDetails(response.data);
+        const response = await paymentSuccessAPI(sessionId);
+        localStorage.setItem('plan_type', response.subscription.plan_type);
+        setSubscriptionDetails(response);
         setLoading(false);
       } catch (err: any) {
         console.error('Error verifying subscription:', err);

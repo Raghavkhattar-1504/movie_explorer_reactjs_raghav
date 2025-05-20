@@ -13,8 +13,7 @@ export const signUpAPI = async (userData: any) => {
 export const loginAPI = async (userData: any) => {
   try {
     const response = await axios.post(`https://movie-ror-priyanshu-singh.onrender.com/api/v1/login`, userData);
-    console.log("LOGIN RES : ", response);
-    
+
     return response.data;
 
   } catch (error) {
@@ -29,8 +28,7 @@ export const logoutAPI = async () => {
       }
     });
 
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
+    localStorage.clear();
     return response.data;
 
   } catch (error) {
@@ -40,17 +38,16 @@ export const logoutAPI = async () => {
 
 export const allMoviesAPI = async (page: number = 1) => {
   try {
-    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const token = localStorage.getItem('token');
     const response = await axios.get(
       `https://movie-ror-priyanshu-singh.onrender.com/api/v1/movies?page=${page}`,
       {
         headers: {
-          'Authorization': `Bearer ${token}`, // Add the Authorization header
-          'Accept': 'application/json', // Add the Accept header
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
         },
       }
     );
-    console.log("response of all movies api", response.data);
 
     return response.data;
   } catch (error) {
@@ -60,18 +57,36 @@ export const allMoviesAPI = async (page: number = 1) => {
 
 export const peopleChoiceAPI = async () => {
   try {
-    const response = await axios.get(`https://movie-ror-priyanshu-singh.onrender.com/api/v1/movies?page=2`);
-    return response.data;
+    const token = localStorage.getItem('token');
+    const response = await axios.get(
+      `https://movie-ror-priyanshu-singh.onrender.com/api/v1/movies?page=2`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+        },
+      }
+    );
 
+    return response.data;
   } catch (error) {
     console.error('Error getting All Movies: ', error);
   }
 }
 
-
 export const movieDetailsAPI = async (id: number) => {
   try {
-    const response = await axios.get(`https://movie-ror-priyanshu-singh.onrender.com/api/v1/movies/${id}`)
+    const token = localStorage.getItem('token');
+    const response = await axios.get(
+      `https://movie-ror-priyanshu-singh.onrender.com/api/v1/movies/${id}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+        },
+      }
+    );
+
     return response.data;
   } catch (error) {
     console.error("Error while retrieving data: ", error);
@@ -102,7 +117,7 @@ export const searchMovieAPI = async (
         params,
         headers: {
           'Content-Type': 'application/json',
-       'Authorization': `Bearer ${token}`, // Add the Authorization header
+          'Authorization': `Bearer ${token}`,
           Accept: 'application/json',
         },
       }
@@ -284,5 +299,65 @@ export const deleteMovieAPI = async (id: number) => {
     return response.data;
   } catch (error) {
     console.error("Error Adding a Movie : ", error);
+  }
+}
+
+export const paymentSuccessAPI = async (sessionID: any) => {
+  try {
+    const authToken = localStorage.getItem('token');
+    const response = await axios.get(
+      `https://movie-ror-priyanshu-singh.onrender.com/api/v1/subscriptions/success?session_id=${sessionID}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error verifying subscription:', error);
+  }
+}
+
+export const toggleWatchlistAPI = async (movieId: string) => {
+  try {
+    const authToken = localStorage.getItem('token');
+    const response = await axios.post(
+      `https://movie-ror-priyanshu-singh.onrender.com/api/v1/watchlist/${movieId}`, {},
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+
+    return response.data;
+  }
+  catch (error) {
+    console.error('Error Toggling Watchlist: ', error);
+  }
+}
+
+export const getWatchlistMoviesAPI = async () => {
+  try {
+    const authToken = localStorage.getItem('token');
+    const response = await axios.get(
+      'https://movie-ror-priyanshu-singh.onrender.com/api/v1/watchlist',
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+
+    return response.data;
+  }
+  catch (error) {
+    console.error('Error Toggling Watchlist: ', error);
   }
 }

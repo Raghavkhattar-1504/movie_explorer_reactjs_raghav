@@ -9,16 +9,17 @@ import AuthPage from './pages/AuthPage';
 import SubscriptionPage from './pages/SubscriptionPage';
 import MovieDetailPage from './pages/MovieDetailPage';
 import AllMoviesPage from './pages/AllMoviesPage';
+import Watchlist from './components/Watchlist';
 
 
 const RoutingModule = () => {
     const route = createBrowserRouter([
         {
-            path: '/login',
+            path: '/',
             element: <AuthPage />
         },
         {
-            path: '/',
+            path: '/home',
             element: <HomePage />
         },
         {
@@ -56,6 +57,10 @@ const RoutingModule = () => {
         {
             path: '/payment/success',
             element: <PaymentSuccessPage />
+        },
+        {
+            path: '/watchlist',
+            element: <Watchlist />
         },
     ]);
 

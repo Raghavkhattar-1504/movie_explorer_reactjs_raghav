@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
-import { Star } from 'lucide-react';
+import { Star, Crown } from 'lucide-react';
 import { Button, Typography } from '@mui/material';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export interface movie {
     id: number;
@@ -14,13 +14,27 @@ export interface movie {
     plan: string;
     poster_url: string;
     banner_url: string;
+    premium: boolean;
 }
 
+
+
 const MovieCard = ({ data }: { data: movie }) => {
+    const navigate = useNavigate();
+
+const handleClick = (data: movie) => {
+    const isSubscriber = localStorage.getItem('plan_type');
+    if(isSubscriber !== 'premium' && data.premium === true ){
+        navigate(`/subscription`);
+    }
+    else{
+        navigate(`/home/detail/${data.id}`);
+    }
+};
+
     const { poster_url, genre } = data;
     return (
-        <NavLink to={`/home/detail/${data.id}`}>
-            <Box
+            <Box onClick={() => handleClick(data)}
                 sx={{
                     position: 'relative',
                     overflow: 'hidden',
@@ -48,6 +62,7 @@ const MovieCard = ({ data }: { data: movie }) => {
                         opacity: 0,
                     }
                 }}
+            
             >
                 <Box
                     component="img"
@@ -95,6 +110,23 @@ const MovieCard = ({ data }: { data: movie }) => {
                         {data.title}
                     </Typography>
                 </Box>
+
+                     {data.premium && (
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: 10,
+                        right: 10,
+                        zIndex: 3,
+                        backgroundColor: 'rgba(0,0,0,0.6)',
+                        borderRadius: '50%',
+                        padding: '5px',
+                    }}
+                >
+                    <Crown size={20} color="#FFD700" fill="#FFD700" />
+                </Box>
+            )}
+
                 <Box
                     className="content"
                     sx={{
@@ -144,7 +176,6 @@ const MovieCard = ({ data }: { data: movie }) => {
                     </Button>
                 </Box>
             </Box >
-        </NavLink>
     );
 };
 

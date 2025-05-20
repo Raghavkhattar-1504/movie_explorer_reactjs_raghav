@@ -15,12 +15,15 @@ import {
 } from '@mui/material';
 import { Logout } from '@mui/icons-material';
 import { logoutAPI } from '../utils/API';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import LoyaltyOutlinedIcon from '@mui/icons-material/LoyaltyOutlined';
 import MovieCreationIcon from '@mui/icons-material/MovieCreation';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import withNavigate from '../utils/HOC';
 import { NavLink } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 interface NavbarState {
   anchorEl: null | HTMLElement;
@@ -52,7 +55,7 @@ class NavbarNew extends Component<NavbarProps, NavbarState> {
   };
 
   handleHomeIconClick = () => {
-    this.props.navigate('/');
+    this.props.navigate('/home');
   };
 
   handleAllMoviesIconClick = () => {
@@ -60,8 +63,19 @@ class NavbarNew extends Component<NavbarProps, NavbarState> {
   };
 
   handleSubscriptionIconClick = () => {
-    this.props.navigate('/subscription');
+    const status = localStorage.getItem('plan_type');
+    if (status === 'premium') {
+      toast.error('Your subscription is already active');
+    } else {
+      this.props.navigate('/subscription');
+    }
   };
+
+
+  handleSubscription = () => {
+    const status = localStorage.getItem('plan_type');
+    return status === 'premium' ? true : false;
+  }
 
   handleSearchClick = () => {
     this.props.navigate('/search');
@@ -74,6 +88,10 @@ class NavbarNew extends Component<NavbarProps, NavbarState> {
   handleMenuClose = () => {
     this.setState({ anchorEl: null });
   };
+
+  handleWatchlist = () => {
+    window.location.href = '/watchlist';
+  }
 
   handleSignOut = async () => {
     try {
@@ -88,6 +106,7 @@ class NavbarNew extends Component<NavbarProps, NavbarState> {
 
   render() {
     const { anchorEl, isMobile } = this.state;
+    const username = localStorage.getItem('name')?.split(' ')[0];
     const open = Boolean(anchorEl);
     const isLoggedIn = !!localStorage.getItem('token');
     const isSupervisor = localStorage.getItem('role') === 'supervisor';
@@ -118,6 +137,7 @@ class NavbarNew extends Component<NavbarProps, NavbarState> {
           },
         }}
       >
+
         <Typography
           sx={{
             fontSize: isMobile ? "20px" : "27px",
@@ -138,7 +158,24 @@ class NavbarNew extends Component<NavbarProps, NavbarState> {
           />
           MOVIE EXPLORER
         </Typography>
-
+        <ToastContainer
+          position={window.innerWidth <= 600 ? 'top-center' : 'top-right'}
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+          toastStyle={{
+            backgroundColor: '#1a1a3d',
+            color: '#fff',
+            border: '1px solid #6C63FF',
+            borderRadius: '8px',
+          }}
+        />
         <Box
           sx={{
             display: 'flex',
@@ -214,6 +251,17 @@ class NavbarNew extends Component<NavbarProps, NavbarState> {
           >
             {isLoggedIn ? (
               [
+                !isSupervisor && (
+                  <MenuItem
+                    onClick={this.handleMenuClose}
+                    key="profile"
+                    data-testid="profile-item"
+                  >
+                    <PermIdentityIcon sx={{ marginRight: 1 }} />
+                    Hi, {username}
+                  </MenuItem>
+                ),
+
                 isMobile && [
                   <MenuItem
                     onClick={this.handleSearchClick}
@@ -251,24 +299,15 @@ class NavbarNew extends Component<NavbarProps, NavbarState> {
                   </NavLink>
                 ),
 
-                !isSupervisor && (
-                  <MenuItem
-                    onClick={this.handleMenuClose}
-                    key="profile"
-                    data-testid="profile-item"
-                  >
-                    <PermIdentityIcon sx={{ marginRight: 1 }} />
-                    Profile
-                  </MenuItem>
-                ),
+                
 
                 <MenuItem
-                  onClick={this.handleMenuClose}
-                  key="account"
-                  data-testid="account-item"
+                  onClick={this.handleWatchlist}
+                  key="watchlist"
+                  data-testid="watchlist-item"
                 >
-                  <AccountCircleIcon sx={{ marginRight: 1 }} />
-                  My account
+                  <BookmarkBorderIcon sx={{ marginRight: 1 }} />
+                  Watchlist
                 </MenuItem>,
 
                 <NavLink
@@ -282,7 +321,7 @@ class NavbarNew extends Component<NavbarProps, NavbarState> {
                     data-testid="no-subscription-item"
                   >
                     <LoyaltyOutlinedIcon sx={{ marginRight: 1 }} />
-                    No Subscription
+                    {this.handleSubscription() ? "Active Subscription" : "No Subscription"}
                   </MenuItem>
                 </NavLink>,
 
@@ -306,6 +345,7 @@ class NavbarNew extends Component<NavbarProps, NavbarState> {
             )}
           </Menu>
         </Box>
+
       </Box>
     );
   }

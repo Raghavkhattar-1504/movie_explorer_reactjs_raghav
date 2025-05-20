@@ -4,6 +4,7 @@ import { Box, Typography } from '@mui/material';
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import withNavigate from '../utils/HOC';
 
 interface ArrowProps {
   className?: string;
@@ -69,7 +70,11 @@ interface Movie {
   poster: string;
 }
 
-export class MainCarousel extends Component {
+interface NavigateProps {
+  navigate: (path: string) => void;
+}
+
+export class MainCarousel extends Component<NavigateProps> {
   render() {
     const settings: Settings = {
       dots: true,
@@ -87,28 +92,31 @@ export class MainCarousel extends Component {
 
     const movies: Movie[] = [
       {
-        id: 3,
+        id: 173,
         title: '500 Days of Summer',
         description: "After being dumped by the girl he believes to be his soulmate, hopeless romantic Tom Hansen reflects on their relationship to try and figure out where things went wrong and how he can win her back.",
         banner: 'https://wallpapers.com/images/hd/sunny-poster-500-days-of-summer-9w6wxl1xynrdyges.jpg',
         poster: 'https://mrwallpaper.com/images/hd/500-days-of-summer-sundance-film-festival-zbj082f293uewc4m.jpg'
       },
       {
-        id: 30,
+        id: 174,
         title: 'Dune',
         description: 'A soldier fighting aliens gets to relive the same day over and over again, the day restarting every time he dies.',
         banner: "http://res.cloudinary.com/dviiukqcy/image/upload/qomtb2qy8eqni73ogm9bbosoxryh",
         poster: "http://res.cloudinary.com/dviiukqcy/image/upload/5w7hv6nzvrroo61oz261x26goe5l"
       },
       {
-        id: 28,
+        id: 175,
         title: 'The Martian',
         description: 'An astronaut becomes stranded on Mars after his team assume him dead, and must rely on his ingenuity to find a way to signal to Earth that he is alive.',
         banner: "http://res.cloudinary.com/dviiukqcy/image/upload/ufdeebvqedqvu2ygqeonkj8ogvwh",
         poster: 'http://res.cloudinary.com/dviiukqcy/image/upload/00kmnr0kj595wwbonl95gt0zhvcu'
       },
-      
     ];
+
+    const handleMovieClick = (id: number) => {
+      this.props.navigate(`/home/detail/${id}`)
+    }
 
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', backgroundColor: 'transparent', paddingTop: 5 }}>
@@ -124,11 +132,13 @@ export class MainCarousel extends Component {
           <Slider {...settings}>
             {movies.map((movie) => (
               <Box
+                onClick={() => handleMovieClick(movie.id)}
                 key={movie.id}
                 sx={{
                   position: 'relative',
                   width: '100%',
                   height: { xs: '500px', sm: '600px' },
+                  cursor: 'pointer'
                 }}
               >
                 <Box
@@ -170,7 +180,7 @@ export class MainCarousel extends Component {
                     justifyContent: { xs: 'center', sm: 'flex-start' },
                   }}
                 >
-                  
+
                   <Box sx={{ flexShrink: 0 }}>
                     <Box
                       component="img"
@@ -220,4 +230,4 @@ export class MainCarousel extends Component {
   }
 }
 
-export default MainCarousel;
+export default withNavigate(MainCarousel);

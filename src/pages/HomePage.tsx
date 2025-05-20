@@ -32,6 +32,7 @@ interface movie {
   plan: string;
   poster_url: string;
   banner_url: string;
+  premium: boolean;
 }
 
 interface HomePageProps {
@@ -45,8 +46,8 @@ interface HomePageState {
 }
 
 const genreList: string[] = [
-   'Action', 'Sci-Fi', 'Romance', 'Drama', 'Thriller',
-     'Dcoumentary', 'Comedy', 'Horror'
+  'Action', 'Sci-Fi', 'Romance', 'Drama', 'Thriller',
+  'Dcoumentary', 'Comedy', 'Horror'
 ];
 
 class HomePage extends Component<HomePageProps, HomePageState> {
@@ -67,8 +68,7 @@ class HomePage extends Component<HomePageProps, HomePageState> {
     window.addEventListener('resize', this.updateDimensions);
     try {
       const response = await peopleChoiceAPI();
-      console.log("RESPONSE OF HOME API : ", response);
-      
+
       this.setState({
         moviesData: response.movies || [],
         isLoading: false,
@@ -160,7 +160,7 @@ class HomePage extends Component<HomePageProps, HomePageState> {
         </IconButton>
       );
     };
-  
+
     const PrevArrow = (props: any) => {
       const { onClick } = props;
       return (
@@ -181,7 +181,7 @@ class HomePage extends Component<HomePageProps, HomePageState> {
         </IconButton>
       );
     };
-  
+
     let slidesToShow = 5;
     let slidesToScroll = 5;
     if (this.isMobile) {
@@ -191,7 +191,7 @@ class HomePage extends Component<HomePageProps, HomePageState> {
       slidesToShow = 2;
       slidesToScroll = 2;
     }
-  
+
     return {
       dots: false,
       infinite: true,
@@ -202,7 +202,7 @@ class HomePage extends Component<HomePageProps, HomePageState> {
       prevArrow: <PrevArrow />,
       responsive: [
         {
-          breakpoint: 1024,
+          breakpoint: 1147,
           settings: {
             slidesToShow: 3,
             slidesToScroll: 1,
@@ -210,14 +210,42 @@ class HomePage extends Component<HomePageProps, HomePageState> {
           },
         },
         {
-          breakpoint: 600,
+          breakpoint: 883,
           settings: {
             slidesToShow: 2,
             slidesToScroll: 1,
           },
         },
         {
-          breakpoint: 480,
+          breakpoint: 600,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1,
+          },
+        },
+        {
+          breakpoint: 1440, // for small laptops/desktops
+          settings: {
+            slidesToShow: 4,
+            slidesToScroll: 4,
+          },
+        },
+        {
+          breakpoint: 1024, // tablets and small laptops
+          settings: {
+            slidesToShow: 3,
+            slidesToScroll: 3,
+          },
+        },
+        {
+          breakpoint: 768, // tablets
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 2,
+          },
+        },
+        {
+          breakpoint: 480, // mobile
           settings: {
             slidesToShow: 1,
             slidesToScroll: 1,
@@ -226,7 +254,7 @@ class HomePage extends Component<HomePageProps, HomePageState> {
       ],
     };
   };
-  
+
 
   renderSkeletonCards = (count: number) => {
     return Array.from({ length: count }).map((_, index) => (
@@ -286,7 +314,7 @@ class HomePage extends Component<HomePageProps, HomePageState> {
                 >
                   TRENDING NOW...
                 </Typography>
-                  {!this.isMobile  ? <SuggestMovieButton /> : <></>}
+                {!this.isMobile ? <SuggestMovieButton /> : <></>}
               </Box>
               <Box sx={{ width: '100%', position: 'relative' }}>
                 {isLoading ? (
@@ -295,7 +323,7 @@ class HomePage extends Component<HomePageProps, HomePageState> {
                   <Slider {...this.getSliderSettings()}>
                     {moviesData.map((data, index) => (
                       <Box key={index} sx={{ px: 2, paddingLeft: this.isMobile ? 1 : 2 }}>
-                        <MovieCard data={data}  />
+                        <MovieCard data={data} />
                       </Box>
                     ))}
                   </Slider>
@@ -329,8 +357,8 @@ class HomePage extends Component<HomePageProps, HomePageState> {
               <Box sx={{ width: '100%', position: 'relative' }}>
                 <Slider {...this.getSliderSettings()}>
                   {genreList.map((genre, index) => (
-                    <Box key={index} sx={{ px: 2 ,paddingLeft: this.isMobile ? 1 : 2}}>
-                      <GenreCard data={genre} onClick={() => this.handleGenre(genre)} data-testid ="genre-card"/>
+                    <Box key={index} sx={{ px: 2, paddingLeft: this.isMobile ? 1 : 2 }}>
+                      <GenreCard data={genre} onClick={() => this.handleGenre(genre)} data-testid="genre-card" />
                     </Box>
                   ))}
                 </Slider>
@@ -339,7 +367,7 @@ class HomePage extends Component<HomePageProps, HomePageState> {
           </Box>
         </Container >
         <Footer />
-         <Box
+        <Box
           position="fixed"
           bottom={16}
           right={16}

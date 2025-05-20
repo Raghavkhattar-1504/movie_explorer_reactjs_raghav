@@ -34,13 +34,12 @@ self.addEventListener('push', (event) => {
   const url = event.notification.data.url;
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      // Focus existing window if open
+   
       for (const client of clientList) {
         if (client.url === url && 'focus' in client) {
           return client.focus();
         }
       }
-      // Otherwise, open new window
       if (clients.openWindow) {
         return clients.openWindow(url);
       }

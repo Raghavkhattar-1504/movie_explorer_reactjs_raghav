@@ -115,12 +115,14 @@ class AuthPage extends Component<AuthProps, AuthState> {
         const response = await loginAPI({ user });
         localStorage.setItem('token', response.auth_info.access_token.token);
         localStorage.setItem('role', response.user.role);
+        localStorage.setItem('plan_type', response.user.plan_type);
+        localStorage.setItem('name', response.user.name);
 
         toast.success('Login successful!', {
           position: window.innerWidth <= 600 ? 'top-center' : 'top-right',
         });
 
-        this.props.navigate('/');
+        this.props.navigate('/home');
       } else {
         const user = {
           name,
@@ -129,15 +131,14 @@ class AuthPage extends Component<AuthProps, AuthState> {
           confirm_password,
           phone_number: mobile_number,
         };
-        const response = await signUpAPI({ user });
-        console.log('SIGNUP RESPONSE : ', response);
+        await signUpAPI({ user });
 
 
         toast.success('Signup successful! Please log in.', {
           position: window.innerWidth <= 600 ? 'top-center' : 'top-right',
         });
 
-        // window.location.reload();
+        window.location.reload();
       }
     } catch (error) {
       console.error("API Error:", error);

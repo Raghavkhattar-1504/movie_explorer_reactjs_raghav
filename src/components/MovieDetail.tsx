@@ -12,16 +12,18 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
-import { allMoviesAPI, deleteMovieAPI, movieDetailsAPI } from '../utils/API';
+import { allMoviesAPI, deleteMovieAPI, movieDetailsAPI, toggleWatchlistAPI } from '../utils/API';
 import { motion } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 
 const MovieDetail = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [moviesData, setMoviesData] = useState<MovieData | null>(null);
   const [allMoviesData, setAllMoviesData] = useState([]);
+  const [isWatchlisted, setIsWatchlisted] = useState(false);
   const { id } = useParams();
   const [role, setRole] = useState<string | null>("user");
   const navigate = useNavigate();
@@ -50,6 +52,10 @@ const MovieDetail = () => {
     const fetchMovies = async () => {
       try {
         const response = await movieDetailsAPI(Number(id));
+        if(response.watchlisted){
+          setIsWatchlisted(true);
+        }
+
         setMoviesData(response);
       } catch (error) {
         console.error('Error fetching movies:', error);
@@ -74,6 +80,17 @@ const MovieDetail = () => {
     fetchMovies();
     fetchAllMovies();
   }, [id, windowWidth]);
+
+  const handleWatchlist = async () => {
+    const response = await toggleWatchlistAPI(String(id));
+    console.log("RESPONSE IN COMPONENT: ", response);
+    if (response.message && response.message === 'Movie removed from watchlist') {
+      setIsWatchlisted(false);
+    }
+    else {
+      setIsWatchlisted(true);
+    }
+  }
 
   const isMobile = windowWidth < 600;
   const isTablet = windowWidth >= 600 && windowWidth < 960;
@@ -189,15 +206,16 @@ const MovieDetail = () => {
   };
 
   const handleDeleteMovie = async (id: number) => {
-    try{
+    try {
       await deleteMovieAPI(id);
+      navigate(-1);
       toast.success('Movie Deleted Successfully.');
     }
-    catch(error){
+    catch (error) {
       console.error("Error while deleting movie : ", error);
       toast.error('Delete movie functionality not implemented yet.', {
-      position: windowWidth <= 600 ? 'top-center' : 'top-right',
-    });
+        position: windowWidth <= 600 ? 'top-center' : 'top-right',
+      });
     }
   };
 
@@ -344,6 +362,22 @@ const MovieDetail = () => {
                 </Button>
               </Box>
             )}
+
+            {role !== 'supervisor' && (
+              <Box sx={{boxShadow: 0}}>
+                {isWatchlisted ?
+                 (<Button onClick={handleWatchlist} sx={{ m: 1, bgcolor: "#3ab481" , borderRadius: 2}} variant="contained">
+                  Added <BookmarkIcon sx={{ml: 1}}/>
+                </Button>)
+                :
+                <Button onClick={handleWatchlist} sx={{ m: 1,bg: '#3a46b4', borderRadius: 2 }} variant="contained">
+                  Add <BookmarkIcon sx={{ml: 1}}  />
+                </Button>
+                }
+                
+
+              </Box>
+            )}
           </Box>
         </Box>
       </Box>
@@ -380,13 +414,13 @@ const MovieDetail = () => {
         >
           {allMoviesData.length > 0 && (
             <Box sx={{ p: isMobile ? '0 10px' : '0 30px' }}>
-            <Slider {...getSliderSettings()} >
-              {allMoviesData.map((data, index) => (
-                <Box key={index} sx={{ px: 5, pl: isMobile ? 3 : 2 }} onClick={handleMovieCardClick}>
-                  <MovieCard data={data} />
-                </Box>
-              ))}
-            </Slider>
+              <Slider {...getSliderSettings()} >
+                {allMoviesData.map((data, index) => (
+                  <Box key={index} sx={{ px: 5, pl: isMobile ? 3 : 2 }} onClick={handleMovieCardClick}>
+                    <MovieCard data={data} />
+                  </Box>
+                ))}
+              </Slider>
             </Box>
           )}
         </Box>

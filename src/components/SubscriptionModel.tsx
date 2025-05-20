@@ -6,6 +6,8 @@ import StarIcon from "@mui/icons-material/Star";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { loadStripe } from "@stripe/stripe-js";
 import { createSubscriptionAPI } from "../utils/API";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 loadStripe("pk_test_51RLTeoGdZXshIjxRiGPAd0ygJF7s8zafVDuIZE6CHgcVccz1GrkxFFgkKw6DHfaSPCajjHfN5EC0SHNDoA64Wc7s005C5B9IoL");
 
@@ -13,37 +15,41 @@ const SubscriptionModel = () => {
   const plans = [
     {
       title: "1 Day Pass",
-      plan : "premium",
+      plan: "premium",
       price: 99,
       gradient: "linear-gradient(135deg, #2c3e50, #4ca1af)",
     },
     {
       title: "Weekly Pass",
-      plan : "premium",
-      price: 499,
+      plan: "premium",
+      price: 599,
       label: "Most Popular",
       gradient: "linear-gradient(135deg, #1c1c1c, #434343)",
     },
     {
       title: "Monthly Pass",
-      plan : "premium",
+      plan: "premium",
       price: 1999,
       label: null,
       gradient: "linear-gradient(135deg, #1f4037, #99f2c8)",
     }
   ];
   const handleSubscribe = async (plan: any) => {
-  const token = localStorage.getItem("token");
-  if(!token)
-    return ;
+    const token = localStorage.getItem("token");
+    const isActive = localStorage.getItem('plan_type');
+    if (!token)
+      return;
+    if(isActive === 'premium'){
+      toast.error("Your Subscription is already active!");
+      return;
+    }
+    const response = await createSubscriptionAPI(token, plan);
+    const { url } = response;
 
-  const response = await createSubscriptionAPI(token, plan);
-  const {url} = response;
-  
-window.location.href = url;
-  
+    window.location.href = url;
 
-};
+
+  };
 
   return (
     <Container
@@ -53,9 +59,30 @@ window.location.href = url;
         backgroundImage: `url(${bg_img})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        minHeight: "90vh",
+        minHeight: "80vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
+      <ToastContainer
+          position={window.innerWidth <= 600 ? 'top-center' : 'top-right'}
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+          toastStyle={{
+            backgroundColor: '#1a1a3d',
+            color: '#fff',
+            border: '1px solid #6C63FF',
+            borderRadius: '8px',
+          }}
+        />
       <Box
         sx={{
           display: "flex",

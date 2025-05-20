@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import {
     Box, Button, TextField, Typography, RadioGroup,
-    FormControlLabel, Radio, Container
+    FormControlLabel, Radio, Container, CircularProgress // Add CircularProgress
 } from '@mui/material';
 import NavbarNew from '../components/NavbarNew';
 import Footer from '../components/Footer';
@@ -19,6 +19,7 @@ const AddMovieForm: React.FC = () => {
     const [plan, setPlan] = useState<boolean>(false);
     const [posterImage, setPosterImage] = useState<File | null>(null);
     const [bannerImage, setBannerImage] = useState<File | null>(null);
+    const [isLoading, setIsLoading] = useState(false); // Add loading state
     const { id } = useParams();
 
     useEffect(() => {
@@ -82,8 +83,10 @@ const AddMovieForm: React.FC = () => {
         e.preventDefault();
 
         if (!validateForm()) return;
-        const formData = new FormData();
 
+        setIsLoading(true); // Set loading to true when submission starts
+
+        const formData = new FormData();
         formData.append("movie[title]", title);
         formData.append("movie[release_year]", year);
         formData.append("movie[rating]", "7.8");
@@ -93,7 +96,6 @@ const AddMovieForm: React.FC = () => {
         formData.append("movie[description]", description);
         formData.append("movie[main_lead]", "James Phillips");
         formData.append("movie[streaming_platform]", "Netflix");
-
         formData.append("movie[premium]", plan.toString());
         if (posterImage) {
             formData.append("movie[poster]", posterImage);
@@ -109,7 +111,6 @@ const AddMovieForm: React.FC = () => {
                     throw new Error('Authentication token is missing.');
                 }
                 await editMovieAPI(formData, Number(id), token);
-
                 toast.success('Movie updated successfully!', {
                     position: window.innerWidth <= 600 ? 'top-center' : 'top-right',
                 });
@@ -126,13 +127,15 @@ const AddMovieForm: React.FC = () => {
             setGenre(0);
             setYear('');
             setPlan(false);
-            setPosterImage(posterImage);
-            setBannerImage(bannerImage);
+            setPosterImage(null); // Reset to null instead of keeping old value
+            setBannerImage(null); // Reset to null instead of keeping old value
         } catch (error) {
             console.error("Error Adding/Editing Movie:", error);
             toast.error('An error occurred. Please try again.', {
                 position: window.innerWidth <= 600 ? 'top-center' : 'top-right',
             });
+        } finally {
+            setIsLoading(false); // Set loading to false when submission completes
         }
     };
 
@@ -246,7 +249,6 @@ const AddMovieForm: React.FC = () => {
                                 color: 'white',
                                 border: 'none',
                                 fontSize: '16px',
-
                             }}
                         >
                             <option value="">Select</option>
@@ -324,6 +326,7 @@ const AddMovieForm: React.FC = () => {
                     <Button
                         type="submit"
                         variant="contained"
+                        disabled={isLoading} 
                         sx={{
                             mt: 3,
                             width: '100%',
@@ -333,8 +336,14 @@ const AddMovieForm: React.FC = () => {
                             borderRadius: 2,
                             padding: 1,
                             fontSize: 17,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                         }}
                     >
+                        {isLoading ? (
+                            <CircularProgress size={24} sx={{ color: '#fff', mr: 1, ml: 3 }} />
+                        ) : null}
                         {id ? "EDIT MOVIE" : "ADD MOVIE"}
                     </Button>
                 </form>

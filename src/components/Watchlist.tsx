@@ -4,17 +4,13 @@ import Footer from '../components/Footer';
 import {
     Box,
     Container,
-    IconButton,
     Typography,
     Skeleton,
     Pagination
 } from '@mui/material';
 import MovieCard from '../components/MovieCard';
-import Slider from 'react-slick';
-import GenreCard from '../components/GenreCard';
-import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import withNavigate from '../utils/HOC';
-import { allMoviesAPI } from '../utils/API';
+import { getWatchlistMoviesAPI } from '../utils/API';
 
 interface movie {
     id: number;
@@ -32,11 +28,6 @@ interface movie {
     premium: boolean;
 }
 
-const genreList: string[] = [
-    'Action', 'Sci-Fi', 'Romance', 'Drama', 'Thriller',
-    'Dcoumentary', 'Comedy', 'Horror',
-];
-
 interface HomePageProps {
     navigate: Function;
 }
@@ -49,7 +40,7 @@ interface HomePageState {
     totalPages: number;
 }
 
-class AllMovies extends Component<HomePageProps, HomePageState> {
+class Watchlist extends Component<HomePageProps, HomePageState> {
     constructor(props: HomePageProps) {
         super(props);
         this.state = {
@@ -81,15 +72,10 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
         try {
             this.setState({ isLoading: true });
 
-            const response = await allMoviesAPI(page);
-
-            const moviesData = response.movies.map((movie: any) => ({
-                ...movie,
-                genre: movie.genre.name,
-            }));
+            const response = await getWatchlistMoviesAPI();
 
             this.setState({
-                moviesData,
+                moviesData: response,
                 isLoading: false,
                 currentPage: page,
                 totalPages: response.totalPages || 10,
@@ -104,15 +90,9 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
         }
     };
 
-
-
     handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
         this.fetchMovies(value);
     }
-
-    handleGenre = (genreName: string) => {
-        this.props.navigate(`/genre/${genreName}`);
-    };
 
     get isMobile() {
         return this.state.windowWidth < 600;
@@ -121,69 +101,6 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
     get isTablet() {
         return this.state.windowWidth >= 600 && this.state.windowWidth < 960;
     }
-
-    NextArrow = (props: any) => {
-        const { onClick } = props;
-        return (
-            <IconButton
-                onClick={onClick}
-                sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    right: this.isMobile ? '2px' : '0px',
-                    transform: 'translateY(-50%)',
-                    zIndex: 2,
-                    backgroundColor: 'rgba(0,0,0,0.5)',
-                    color: 'white',
-                    '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)' },
-                }}
-            >
-                <ArrowForwardIos fontSize="small" />
-            </IconButton>
-        );
-    };
-
-    PrevArrow = (props: any) => {
-        const { onClick } = props;
-        return (
-            <IconButton
-                onClick={onClick}
-                sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: this.isMobile ? '2px' : '-10px',
-                    transform: 'translateY(-50%)',
-                    zIndex: 10,
-                    backgroundColor: 'rgba(0,0,0,0.5)',
-                    color: 'white',
-                    '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)' },
-                }}
-            >
-                <ArrowBackIos fontSize="small" />
-            </IconButton>
-        );
-    };
-
-    getSliderSettings = () => {
-        let slidesToShow = 5;
-        let slidesToScroll = 5;
-        if (this.isMobile) {
-            slidesToShow = 1;
-            slidesToScroll = 1;
-        } else if (this.isTablet) {
-            slidesToShow = 2;
-            slidesToScroll = 2;
-        }
-        return {
-            dots: false,
-            infinite: true,
-            speed: 500,
-            slidesToShow,
-            slidesToScroll,
-            nextArrow: <this.NextArrow />,
-            prevArrow: <this.PrevArrow />,
-        };
-    };
 
     renderSkeletons = (count = 5) => {
         return Array.from({ length: count }).map((_, index) => (
@@ -213,23 +130,8 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
                             paddingX: paddingX,
                         }}
                     >
-                        <Box sx={{ width: '100%', px: paddingX, py: 3 }}>
-                            <Typography variant="h5" sx={{ color: 'white', fontSize: this.isMobile ? '20px' : '25px', mb: 2 }}>
-                                TOP GENRES...
-                            </Typography>
-                            <Box sx={{ width: '100%', position: 'relative' }}>
-                                <Slider {...this.getSliderSettings()}>
-                                    {genreList.map((genre, index) => (
-                                        <Box key={index} sx={{ px: 1 }}>
-                                            <GenreCard data={genre} onClick={() => this.handleGenre(genre)} />
-                                        </Box>
-                                    ))}
-                                </Slider>
-                            </Box>
-                        </Box>
-
                         <Typography sx={{ fontSize: this.isMobile ? '20px' : '25px', color: 'white', py: 2, width: '100%', textAlign: 'center' }}>
-                            ALL MOVIES...
+                            WATCHLISTED MOVIES...
                         </Typography>
 
                         <Box
@@ -244,7 +146,7 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
                         >
                             {this.state.isLoading
                                 ? this.renderSkeletons(this.isMobile ? 3 : 6)
-                                : this.state.moviesData.map((data: movie, index: Key | null | undefined) => (
+                                : (this.state.moviesData ?? []).map((data: movie, index: Key | null | undefined) => (
                                     <Box key={index} sx={{ maxWidth: 260, width: this.isMobile ? '90vw' : 'auto' }}>
                                         <MovieCard data={data} />
                                     </Box>
@@ -283,4 +185,4 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
     }
 }
 
-export default withNavigate(AllMovies);
+export default withNavigate(Watchlist);
