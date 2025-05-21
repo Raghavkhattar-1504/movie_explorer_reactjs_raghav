@@ -1,8 +1,11 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import {
     Box, Button, TextField, Typography, RadioGroup,
-    FormControlLabel, Radio, Container, CircularProgress // Add CircularProgress
+    FormControlLabel, Radio, Container, CircularProgress
 } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import NavbarNew from '../components/NavbarNew';
 import Footer from '../components/Footer';
 import { useParams } from 'react-router-dom';
@@ -15,11 +18,11 @@ const AddMovieForm: React.FC = () => {
     const [description, setDescription] = useState('');
     const [director, setDirector] = useState('');
     const [genre, setGenre] = useState<number | "">(0);
-    const [year, setYear] = useState('');
+    const [year, setYear] = useState<Date | null>(null);
     const [plan, setPlan] = useState<boolean>(false);
     const [posterImage, setPosterImage] = useState<File | null>(null);
     const [bannerImage, setBannerImage] = useState<File | null>(null);
-    const [isLoading, setIsLoading] = useState(false); // Add loading state
+    const [isLoading, setIsLoading] = useState(false);
     const { id } = useParams();
 
     useEffect(() => {
@@ -31,7 +34,7 @@ const AddMovieForm: React.FC = () => {
                     setDescription(response.description);
                     setDirector(response.director);
                     setGenre(response.genre.id);
-                    setYear(response.release_year);
+                    setYear(new Date(response.release_year, 0, 1));
                     setBannerImage(response.banner_url);
                     setPosterImage(response.poster_url);
                 } catch (error) {
@@ -65,7 +68,7 @@ const AddMovieForm: React.FC = () => {
             errors.push('Genre is required');
             isValid = false;
         }
-        if (!year || isNaN(Number(year))) {
+        if (!year) {
             errors.push('Valid year is required');
             isValid = false;
         }
@@ -84,11 +87,11 @@ const AddMovieForm: React.FC = () => {
 
         if (!validateForm()) return;
 
-        setIsLoading(true); // Set loading to true when submission starts
+        setIsLoading(true);
 
         const formData = new FormData();
         formData.append("movie[title]", title);
-        formData.append("movie[release_year]", year);
+        formData.append("movie[release_year]", year ? year.getFullYear().toString() : '');
         formData.append("movie[rating]", "7.8");
         formData.append("movie[genre_id]", genre.toString());
         formData.append("movie[director]", director);
@@ -125,17 +128,17 @@ const AddMovieForm: React.FC = () => {
             setDescription('');
             setDirector('');
             setGenre(0);
-            setYear('');
+            setYear(null);
             setPlan(false);
-            setPosterImage(null); // Reset to null instead of keeping old value
-            setBannerImage(null); // Reset to null instead of keeping old value
+            setPosterImage(null);
+            setBannerImage(null);
         } catch (error) {
             console.error("Error Adding/Editing Movie:", error);
             toast.error('An error occurred. Please try again.', {
                 position: window.innerWidth <= 600 ? 'top-center' : 'top-right',
             });
         } finally {
-            setIsLoading(false); // Set loading to false when submission completes
+            setIsLoading(false);
         }
     };
 
@@ -179,6 +182,7 @@ const AddMovieForm: React.FC = () => {
                     borderRadius: 4,
                     boxShadow: 4,
                     color: '#fff',
+                    overflowY: "visible"
                 }}
             >
                 <Typography
@@ -263,27 +267,89 @@ const AddMovieForm: React.FC = () => {
                         </select>
                     </Box>
 
-                    <TextField
-                        fullWidth
-                        name="year"
-                        label="Year"
-                        type="number"
-                        value={year}
-                        onChange={(e) => setYear(e.target.value)}
-                        margin="normal"
-                        required
-                        InputProps={{ style: { color: 'white' } }}
-                        InputLabelProps={{ style: { color: '#94A3B8' } }}
-                        sx={{ bgcolor: '#1E293B', borderRadius: 1 }}
-                    />
+                    {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                            views={['year']}
+                            label="Year"
+                            value={year}
+                            onChange={(newValue) => setYear(newValue)}
+                            slotProps={{
+                                textField: {
+                                    fullWidth: true,
+                                    required: true,
+                                    margin: 'normal',
+                                    InputProps: { style: { color: 'white' } },
+                                    InputLabelProps: { style: { color: '#94A3B8' } },
+                                    sx: { bgcolor: '#1E293B', borderRadius: 1 }
+                                },
+                                popper: {
+                                    sx: { zIndex: 9999 }, placement: 'bottom',
+                                    modifiers: [
+                                        {
+                                            name: 'preventOverflow',
+                                            options: {
+                                                boundariesElement: 'viewport',
+                                            },
+                                        },
+                                    ],
+                                }
+                            }}
+                        />
+                    </LocalizationProvider> */}
 
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                            views={['year']}
+                            label="Year"
+                            value={year}
+                            onChange={(newValue) => setYear(newValue)}
+                            slotProps={{
+                                textField: {
+                                    fullWidth: true,
+                                    required: true,
+                                    margin: 'normal',
+                                    InputProps: { style: { color: 'white' } },
+                                    InputLabelProps: { style: { color: '#94A3B8' } },
+                                    sx: {
+                                        bgcolor: '#1E293B',
+                                        borderRadius: 1,
+                                        '& input[type=number]': {
+                                            MozAppearance: 'textfield',
+                                            WebkitAppearance: 'none',
+                                            margin: 0,
+                                        },
+                                        '& input[type=number]::-webkit-outer-spin-button': {
+                                            WebkitAppearance: 'none',
+                                            margin: 0,
+                                        },
+                                        '& input[type=number]::-webkit-inner-spin-button': {
+                                            WebkitAppearance: 'none',
+                                            margin: 0,
+                                        },
+                                    }
+                                },
+                                popper: {
+                                    sx: { zIndex: 9999 },
+                                    placement: 'bottom',
+                                    modifiers: [
+                                        {
+                                            name: 'preventOverflow',
+                                            options: {
+                                                boundariesElement: 'viewport',
+                                            },
+                                        },
+                                    ],
+                                }
+                            }}
+                        />
+                    </LocalizationProvider>
                     <Box mt={2}>
                         <Typography variant="subtitle1" sx={{ color: '#fff' }}>
                             Premium:
                         </Typography>
                         <RadioGroup row value={plan} onChange={(e) => setPlan(e.target.value === "true")}>
-                            <FormControlLabel value="true" control={<Radio sx={{ color: '#fff' }} />} label="True" />
-                            <FormControlLabel value="false" control={<Radio sx={{ color: '#fff' }} />} label="False" />
+                            <FormControlLabel value="true" control={<Radio sx={{ color: '#fff' }} />} label="Yes" />
+                            <FormControlLabel value="false" control={<Radio sx={{ color: '#fff' }} />} label="No" />
                         </RadioGroup>
                     </Box>
 
@@ -326,7 +392,7 @@ const AddMovieForm: React.FC = () => {
                     <Button
                         type="submit"
                         variant="contained"
-                        disabled={isLoading} 
+                        disabled={isLoading}
                         sx={{
                             mt: 3,
                             width: '100%',

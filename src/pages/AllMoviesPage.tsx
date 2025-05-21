@@ -47,6 +47,7 @@ interface HomePageState {
     isLoading: boolean;
     currentPage: number;
     totalPages: number;
+    genreState: string;
 }
 
 class AllMovies extends Component<HomePageProps, HomePageState> {
@@ -57,7 +58,8 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
             moviesData: [],
             isLoading: true,
             currentPage: 1,
-            totalPages: 1
+            totalPages: 1,
+            genreState:''
         };
     }
 
@@ -106,7 +108,36 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
     }
 
     handleGenre = (genreName: string) => {
-        this.props.navigate(`/genre/${genreName}`);
+        let genreId = 13;
+
+        if (genreName === 'Action') {
+            genreId = 3
+        }
+        else if (genreName === 'Comedy') {
+            genreId = 2
+        }
+        else if (genreName === 'Drama') {
+            genreId = 10
+        }
+        else if (genreName === 'Sci-Fi') {
+            genreId = 4
+        }
+        else if (genreName === 'Romance') {
+            genreId = 12
+        }
+        else if (genreName === 'Horror') {
+            genreId = 11
+        }
+        else if (genreName === 'Documentary') {
+            genreId = 14
+        }
+        else if (genreName === 'Thriller') {
+            genreId = 13
+        }
+        else {
+            genreId = 2
+        }
+        this.props.navigate(`/genre/${genreId}`);
     };
 
     get isMobile() {
@@ -208,7 +239,7 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
                             paddingX: paddingX,
                         }}
                     >
-                        <Box sx={{ width: '100%',px: this.isMobile ? 1 : 3, py: 3 }}>
+                        <Box sx={{ width: '100%', px: this.isMobile ? 1 : 3, py: 3 }}>
                             <Typography variant="h5" sx={{ color: 'white', fontSize: this.isMobile ? '20px' : '25px', mb: 2 }}>
                                 TOP GENRES...
                             </Typography>

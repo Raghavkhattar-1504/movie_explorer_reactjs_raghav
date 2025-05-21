@@ -233,7 +233,8 @@ export const genreBasedMoviesAPI = async (): Promise<string | null> => {
 
 export const getMoviesByGenre = async (genre: string) => {
   try {
-    const response = await axios.get(`https://movie-ror-priyanshu-singh.onrender.com/api/v1/movies?genre=${genre}`);
+    const response = await axios.get(`https://movie-ror-priyanshu-singh.onrender.com/api/v1/movies?genre_id=${genre}`);
+    console.log("RESPONSE IN API: ", response);
     return response.data.movies;
 
   } catch (error) {
@@ -356,5 +357,19 @@ export const getWatchlistMoviesAPI = async () => {
   }
   catch (error) {
     console.error('Error Toggling Watchlist: ', error);
+  }
+}
+
+export const getGenreByIdAPI=async(genreId: string)=>{
+  try {
+    const response = await axios.get(
+      `https://movie-ror-priyanshu-singh.onrender.com/api/v1/genres/${genreId}`,
+      
+    );
+
+    return response.data.name;
+  }
+  catch (error) {
+    console.error('Error Fetching Genre Name: ', error);
   }
 }

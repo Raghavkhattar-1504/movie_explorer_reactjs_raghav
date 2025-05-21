@@ -95,7 +95,36 @@ class HomePage extends Component<HomePageProps, HomePageState> {
   }
 
   handleGenre = (genreName: string) => {
-    this.props.navigate(`/genre/${genreName}`);
+    let genreId = 13;
+
+        if (genreName === 'Action') {
+            genreId = 3
+        }
+        else if (genreName === 'Comedy') {
+            genreId = 2
+        }
+        else if (genreName === 'Drama') {
+            genreId = 10
+        }
+        else if (genreName === 'Sci-Fi') {
+            genreId = 4
+        }
+        else if (genreName === 'Romance') {
+            genreId = 12
+        }
+        else if (genreName === 'Horror') {
+            genreId = 11
+        }
+        else if (genreName === 'Documentary') {
+            genreId = 14
+        }
+        else if (genreName === 'Thriller') {
+            genreId = 13
+        }
+        else {
+            genreId = 2
+        }
+    this.props.navigate(`/genre/${genreId}`);
   };
 
   get isMobile() {

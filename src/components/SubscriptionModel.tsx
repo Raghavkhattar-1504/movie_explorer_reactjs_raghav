@@ -146,7 +146,7 @@ const SubscriptionModel = () => {
                 </Typography>
               </Box>
               <Typography variant="h6" sx={{ mb: 2 }}>
-                Rs.{plan.price}
+                Rs.{plan.price}/month
               </Typography>
               <Box
                 component="ul"

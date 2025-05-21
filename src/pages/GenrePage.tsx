@@ -3,7 +3,7 @@ import Navbar from '../components/NavbarNew'
 import Footer from '../components/Footer'
 import { Box, Container, Typography, Skeleton } from '@mui/material'
 import MovieCard from '../components/MovieCard'
-import { getMoviesByGenre } from '../utils/API'
+import { getGenreByIdAPI, getMoviesByGenre } from '../utils/API'
 import { useEffect, useState } from 'react'
 
 interface Movie {
@@ -25,6 +25,7 @@ const GenrePage = () => {
   const { genre } = useParams<{ genre: string }>();
   const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
+  const [genreName, setGenreName]=useState<String>('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,7 +34,13 @@ const GenrePage = () => {
       setLoading(false);
     };
 
+    const fetchGenre=async()=>{
+      const response=await getGenreByIdAPI(String(genre));
+      setGenreName(response);
+    }
+
     fetchData();
+    fetchGenre();
   }, [genre]);
 
   const renderSkeletons = () => {
@@ -65,7 +72,7 @@ const GenrePage = () => {
           variant="h4"
           sx={{ color: 'white', marginBottom: 2, fontSize: '25px', paddingLeft: 4 }}
         >
-          {(genre?.toUpperCase() || 'ALL MOVIES')} MOVIES
+          {(genreName?.toUpperCase() || 'ALL MOVIES')} MOVIES
         </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'center' }}>
           {loading
