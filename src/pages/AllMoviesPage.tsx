@@ -59,7 +59,7 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
             isLoading: true,
             currentPage: 1,
             totalPages: 1,
-            genreState:''
+            genreState: ''
         };
     }
 
@@ -72,6 +72,8 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
         const savedPage = localStorage.getItem('currentPage');
         const initialPage = savedPage ? parseInt(savedPage, 10) : 1;
         this.fetchMovies(initialPage);
+        window.scrollTo(0, 0);
+
     }
 
     componentWillUnmount() {

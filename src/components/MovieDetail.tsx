@@ -363,7 +363,6 @@ const MovieDetail = () => {
               </Box>
             )}
 
-            {role !== 'supervisor' && (
               <Box sx={{boxShadow: 0}}>
                 {isWatchlisted ?
                  (<Button onClick={handleWatchlist} sx={{ m: 1, bgcolor: "#3ab481" , borderRadius: 2}} variant="contained">
@@ -377,7 +376,6 @@ const MovieDetail = () => {
                 
 
               </Box>
-            )}
           </Box>
         </Box>
       </Box>

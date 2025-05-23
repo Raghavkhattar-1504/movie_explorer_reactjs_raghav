@@ -4,6 +4,9 @@ import SubscriptionModel from '../components/SubscriptionModel'
 import Footer from '../components/Footer'
 
 export default class SubscriptionPage extends Component {
+  componentDidMount(): void {
+    window.scrollTo(0, 0);
+  }
   render() {
     return (
       <>

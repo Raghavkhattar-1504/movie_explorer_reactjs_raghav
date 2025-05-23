@@ -1,6 +1,14 @@
 import { Container, Box, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 function Footer() {
+    const navLinks = [
+        { label: 'Home', path: '/' },
+        { label: 'All Movies', path: '/allmovies' },
+        { label: 'Feedback', path: '/' },
+        { label: 'Help', path: '/' },
+    ];
+
     return (
         <footer>
             <Container
@@ -77,20 +85,23 @@ function Footer() {
                                 fontFamily: 'roboto',
                             }}
                         >
-                            {['Home', 'All Movies', 'Feedback', 'Help'].map((text, index) => (
+                            {navLinks.map((link, index) => (
                                 <Typography
                                     key={index}
-                                    component="a"
-                                    href="#"
+                                    component={Link}
+                                    to={link.path}
                                     sx={{
                                         color: 'white',
                                         textDecoration: 'none',
                                         padding: { xs: '0 8px', sm: '0 10px' },
                                         fontSize: { xs: 12, sm: 14 },
                                         whiteSpace: 'nowrap',
+                                        display: 'flex',
+                                        alignItems: 'center',
                                     }}
                                 >
-                                    {text} <span style={{ fontSize: '12px', marginLeft: '3px' }}>↗</span>
+                                    {link.label}
+                                    <span style={{ fontSize: '12px', marginLeft: '3px' }}>↗</span>
                                 </Typography>
                             ))}
                         </Box>
@@ -113,7 +124,7 @@ function Footer() {
                                 fontSize: { xs: '10px', sm: '12px' },
                             }}
                         >
-                            © 1990-2025 by MovieExplorer.com, Inc.
+                            © 1990–2025 by MovieExplorer.com, Inc.
                         </Typography>
                     </Box>
                 </Box>

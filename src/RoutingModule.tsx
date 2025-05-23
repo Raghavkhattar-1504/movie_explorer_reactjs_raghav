@@ -9,7 +9,8 @@ import AuthPage from './pages/AuthPage';
 import SubscriptionPage from './pages/SubscriptionPage';
 import MovieDetailPage from './pages/MovieDetailPage';
 import AllMoviesPage from './pages/AllMoviesPage';
-import Watchlist from './components/Watchlist';
+import NotFoundPage from './pages/NotFoundPage';
+import WatchlistPage from './pages/WatchlistPage';
 
 
 const RoutingModule = () => {
@@ -60,7 +61,11 @@ const RoutingModule = () => {
         },
         {
             path: '/watchlist',
-            element: <Watchlist />
+            element: <WatchlistPage />
+        },
+        {
+            path: '/*',
+            element: <NotFoundPage />
         },
     ]);
 

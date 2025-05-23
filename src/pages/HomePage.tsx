@@ -48,7 +48,7 @@ interface HomePageState {
 
 const genreList: string[] = [
   'Action', 'Sci-Fi', 'Romance', 'Drama', 'Thriller',
-  'Documentary', 'Comedy', 'Horror' 
+  'Documentary', 'Comedy', 'Horror'
 ];
 
 class HomePage extends Component<HomePageProps, HomePageState> {
@@ -88,6 +88,7 @@ class HomePage extends Component<HomePageProps, HomePageState> {
       console.error('Error fetching movies:', error);
       this.setState({ isLoading: false });
     }
+    window.scrollTo(0, 0);
   }
 
   componentWillUnmount() {
@@ -97,33 +98,33 @@ class HomePage extends Component<HomePageProps, HomePageState> {
   handleGenre = (genreName: string) => {
     let genreId = 13;
 
-        if (genreName === 'Action') {
-            genreId = 3
-        }
-        else if (genreName === 'Comedy') {
-            genreId = 2
-        }
-        else if (genreName === 'Drama') {
-            genreId = 10
-        }
-        else if (genreName === 'Sci-Fi') {
-            genreId = 4
-        }
-        else if (genreName === 'Romance') {
-            genreId = 12
-        }
-        else if (genreName === 'Horror') {
-            genreId = 11
-        }
-        else if (genreName === 'Documentary') {
-            genreId = 14
-        }
-        else if (genreName === 'Thriller') {
-            genreId = 13
-        }
-        else {
-            genreId = 2
-        }
+    if (genreName === 'Action') {
+      genreId = 3
+    }
+    else if (genreName === 'Comedy') {
+      genreId = 2
+    }
+    else if (genreName === 'Drama') {
+      genreId = 10
+    }
+    else if (genreName === 'Sci-Fi') {
+      genreId = 4
+    }
+    else if (genreName === 'Romance') {
+      genreId = 12
+    }
+    else if (genreName === 'Horror') {
+      genreId = 11
+    }
+    else if (genreName === 'Documentary') {
+      genreId = 14
+    }
+    else if (genreName === 'Thriller') {
+      genreId = 13
+    }
+    else {
+      genreId = 2
+    }
     this.props.navigate(`/genre/${genreId}`);
   };
 
@@ -339,7 +340,7 @@ class HomePage extends Component<HomePageProps, HomePageState> {
     let slidesToShow = 5;
     let slidesToScroll = 5;
     if (this.isMobile) {
-      slidesToShow = 1; 
+      slidesToShow = 1;
       slidesToScroll = 1;
     } else if (this.isTablet) {
       slidesToShow = 2;
@@ -373,7 +374,7 @@ class HomePage extends Component<HomePageProps, HomePageState> {
         {
           breakpoint: 600,
           settings: {
-            slidesToShow: 1, 
+            slidesToShow: 1,
             slidesToScroll: 1,
           },
         },
@@ -401,7 +402,7 @@ class HomePage extends Component<HomePageProps, HomePageState> {
         {
           breakpoint: 480,
           settings: {
-            slidesToShow: 1, 
+            slidesToShow: 1,
             slidesToScroll: 1,
           },
         },

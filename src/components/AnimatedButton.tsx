@@ -3,6 +3,7 @@ import { styled, keyframes } from '@mui/system';
 import { fetchRandomMovieId, movieDetailsAPI } from '../utils/API';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const rotate = keyframes`
   0% {
@@ -56,8 +57,13 @@ const AnimatedBorderButton = styled(Button)(() => ({
 export default function SuggestMovieButton() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const plan = localStorage.getItem('plan_type');
 
     const handleSubmitButton = async () => {
+        if(plan !== 'premium'){
+            toast.error('You have no active Subscription!');
+            return;
+        }
         setLoading(true);
 
         try {

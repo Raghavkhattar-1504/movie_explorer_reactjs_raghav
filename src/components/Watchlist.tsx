@@ -1,12 +1,9 @@
-import { Component, Key } from 'react';
-import Navbar from '../components/NavbarNew';
-import Footer from '../components/Footer';
+import { Component} from 'react';
 import {
     Box,
     Container,
     Typography,
     Skeleton,
-    Pagination
 } from '@mui/material';
 import MovieCard from '../components/MovieCard';
 import withNavigate from '../utils/HOC';
@@ -114,8 +111,7 @@ class Watchlist extends Component<HomePageProps, HomePageState> {
     render() {
         const paddingX = this.isMobile ? 1 : 3;
         return (
-            <div>
-                <Navbar />
+            <>
                 <Container maxWidth={false} disableGutters sx={{ padding: 0, margin: 0 }}>
                     <Box
                         sx={{
@@ -146,41 +142,22 @@ class Watchlist extends Component<HomePageProps, HomePageState> {
                         >
                             {this.state.isLoading
                                 ? this.renderSkeletons(this.isMobile ? 3 : 6)
-                                : (this.state.moviesData ?? []).map((data: movie, index: Key | null | undefined) => (
-                                    <Box key={index} sx={{ maxWidth: 260, width: this.isMobile ? '47vw' : 'auto' }}>
-                                        <MovieCard data={data} />
-                                    </Box>
-                                ))
+                                : (
+                                    this.state.moviesData.length > 0 ? (
+                                        this.state.moviesData.map((movie) => (
+                                            <MovieCard key={movie.id} data={movie} />
+                                        ))
+                                    ) : (
+                                        <Typography sx={{ color: 'white', mt: 30, opacity: 0.6, fontSize: '30px' }}>
+                                            No movies in your watchlist :(
+                                        </Typography>
+                                    )
+                                )
                             }
-                        </Box>
-
-                        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', mt: 4 }}>
-                            <Pagination
-                                count={this.state.totalPages}
-                                page={this.state.currentPage}
-                                onChange={this.handlePageChange}
-                                variant="outlined"
-                                shape="rounded"
-                                sx={{
-                                    '& .MuiPaginationItem-root': {
-                                        color: 'white',
-                                        borderColor: 'white',
-                                        mb: 5,
-                                    },
-                                    '& .MuiPaginationItem-root.Mui-selected': {
-                                        backgroundColor: 'white',
-                                        color: 'black',
-                                    },
-                                    '& .MuiPaginationItem-root.Mui-selected:hover': {
-                                        backgroundColor: 'white',
-                                    },
-                                }}
-                            />
                         </Box>
                     </Box>
                 </Container>
-                <Footer />
-            </div>
+            </>
         );
     }
 }

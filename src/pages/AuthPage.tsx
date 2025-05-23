@@ -6,12 +6,14 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { CircularProgress } from '@mui/material';
 import withNavigate from '../utils/HOC';
 import { CirclePlay } from 'lucide-react';
 import { loginAPI, signUpAPI } from '../utils/API';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import bg_img from '../assets/Firefly 20250426033443.png'
+
 interface AuthProps {
   navigate: (path: string) => void;
 }
@@ -95,7 +97,15 @@ class AuthPage extends Component<AuthProps, AuthState> {
   };
 
   toggleMode = () => {
-    this.setState(prevState => ({ isLogin: !prevState.isLogin, validationErrors: {} }));
+    this.setState({
+      isLogin: !this.state.isLogin,
+      name: '',
+      email: '',
+      password: '',
+      confirm_password: '',
+      mobile_number: '',
+      validationErrors: {},
+    });
   };
 
   handleSubmit = async () => {
@@ -108,7 +118,6 @@ class AuthPage extends Component<AuthProps, AuthState> {
       email,
       password,
     };
-
 
     try {
       if (isLogin) {
@@ -133,7 +142,6 @@ class AuthPage extends Component<AuthProps, AuthState> {
         };
         await signUpAPI({ user });
 
-
         toast.success('Signup successful! Please log in.', {
           position: window.innerWidth <= 600 ? 'top-center' : 'top-right',
         });
@@ -142,7 +150,7 @@ class AuthPage extends Component<AuthProps, AuthState> {
       }
     } catch (error) {
       console.error("API Error:", error);
-      toast.error('An error occurred. Please try again.');
+      toast.error('Please enter correct email and password!');
     } finally {
       this.setState({ loading: false });
     }
@@ -258,7 +266,7 @@ class AuthPage extends Component<AuthProps, AuthState> {
                   width: {
                     xs: '80vw',
                     sm: '55vw',
-                    md: '30vw',
+                    md: '35vw',
                   },
                   maxWidth: {
                     xs: '400px',
@@ -289,7 +297,10 @@ class AuthPage extends Component<AuthProps, AuthState> {
                       borderBottom: isLogin ? '5px solid #6C63FF' : 'none',
                       paddingBottom: isLogin ? 1 : 0,
                     }}
-                    onClick={() => this.setState({ isLogin: true })}
+                    onClick={() => {
+                      this.setState({ isLogin: true });
+                      this.toggleMode();
+                    }}
                   >
                     LOGIN
                   </Typography>
@@ -304,7 +315,10 @@ class AuthPage extends Component<AuthProps, AuthState> {
                       borderBottom: !isLogin ? '5px solid #6C63FF' : 'none',
                       paddingBottom: !isLogin ? 1 : 0,
                     }}
-                    onClick={() => this.setState({ isLogin: false })}
+                    onClick={() => {
+                      this.setState({ isLogin: false });
+                      this.toggleMode();
+                    }}
                   >
                     SIGNUP
                   </Typography>
@@ -460,16 +474,25 @@ class AuthPage extends Component<AuthProps, AuthState> {
                   variant="contained"
                   fullWidth
                   onClick={this.handleSubmit}
-                  disabled={loading}
                   sx={{
                     mt: 3,
                     bgcolor: '#5B52E6',
                     ':hover': { bgcolor: '#3F3AB3' },
                     fontFamily: 'inherit',
                     cursor: loading ? 'not-allowed' : 'pointer',
+                    position: 'relative',
                   }}
                 >
-                  {isLogin ? 'LOGIN' : 'SIGN UP'}
+                  {loading ? (
+                    <CircularProgress
+                      size={24}
+                      sx={{
+                        color: 'white',
+                      }}
+                    />
+                  ) : (
+                    isLogin ? 'LOGIN' : 'SIGN UP'
+                  )}
                 </Button>
               </Paper>
             </Box>
