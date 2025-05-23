@@ -19,6 +19,7 @@ interface Movie {
   plan: string;
   poster_url: string;
   banner_url: string;
+  premium : boolean;
 }
 
 const GenrePage = () => {
