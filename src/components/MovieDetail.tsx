@@ -83,7 +83,6 @@ const MovieDetail = () => {
 
   const handleWatchlist = async () => {
     const response = await toggleWatchlistAPI(String(id));
-    console.log("RESPONSE IN COMPONENT: ", response);
     if (response.message && response.message === 'Movie removed from watchlist') {
       setIsWatchlisted(false);
     }

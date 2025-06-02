@@ -110,31 +110,31 @@ class AllMovies extends Component<HomePageProps, HomePageState> {
     }
 
     handleGenre = (genreName: string) => {
-        let genreId = 13;
+        let genreId = 3;
 
         if (genreName === 'Action') {
             genreId = 3
         }
         else if (genreName === 'Comedy') {
-            genreId = 2
+            genreId = 7
         }
         else if (genreName === 'Drama') {
-            genreId = 10
+            genreId = 8
         }
         else if (genreName === 'Sci-Fi') {
-            genreId = 4
+            genreId = 5
         }
         else if (genreName === 'Romance') {
-            genreId = 12
+            genreId = 1
         }
         else if (genreName === 'Horror') {
-            genreId = 11
+            genreId = 2
         }
         else if (genreName === 'Documentary') {
-            genreId = 14
+            genreId = 6
         }
         else if (genreName === 'Thriller') {
-            genreId = 13
+            genreId = 7
         }
         else {
             genreId = 2

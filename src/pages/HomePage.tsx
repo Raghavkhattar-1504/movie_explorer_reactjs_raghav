@@ -237,6 +237,8 @@ class HomePage extends Component<HomePageProps, HomePageState> {
       speed: 500,
       slidesToShow,
       slidesToScroll,
+      autoplay: true,
+      autoplaySpeed: 3000,
       nextArrow: <NextArrow />,
       prevArrow: <PrevArrow />,
       responsive: [
